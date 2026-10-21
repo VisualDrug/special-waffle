@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Колода жизни — карточки советов</title>
+<meta name="description" content="Вытягивайте случайные карточки из 765 советов справочника «Жить выгоднее» и сохраняйте нужные в избранное.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: одна колонка. Сверху вкладки и фильтры, в центре стопка карт и открытая карта, снизу кнопки действий. */
+:root{
+  --bg:#f3f4f2; --surface:#ffffff; --fg:#17201d; --muted:#5b6762; --line:#d5dad6; --ink:#1d3a34;
+  --life:#c0392b; --time:#2d6cb0; --money:#2a8453; --free:#a86d12;
+  --life-bg:#f8e3df; --time-bg:#dfeaf6; --money-bg:#dff0e6; --free-bg:#f5e9d3;
+  --accent:#c0392b; --shadow:0 10px 30px rgba(20,40,35,.12);
+  --f-disp:'Unbounded','Golos Text',system-ui,sans-serif;
+  --f-body:'Golos Text',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121816; --surface:#1a2320; --fg:#e6ece8; --muted:#97a5a0; --line:#2e3b36; --ink:#a8d6c8;
+  --life:#ec7a6c; --time:#7fb0e6; --money:#6cc592; --free:#e0aa55;
+  --life-bg:#3a2320; --time-bg:#1f2f42; --money-bg:#1d3629; --free-bg:#3b2f18;
+  --accent:#ec7a6c; --shadow:0 10px 30px rgba(0,0,0,.4); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121816; --surface:#1a2320; --fg:#e6ece8; --muted:#97a5a0; --line:#2e3b36; --ink:#a8d6c8;
+  --life:#ec7a6c; --time:#7fb0e6; --money:#6cc592; --free:#e0aa55;
+  --life-bg:#3a2320; --time-bg:#1f2f42; --money-bg:#1d3629; --free-bg:#3b2f18;
+  --accent:#ec7a6c; --shadow:0 10px 30px rgba(0,0,0,.4); color-scheme:dark}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 56px}
+.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--f-disp);font-size:clamp(1.4rem,5vw,1.9rem);margin:0;line-height:1.15;text-wrap:balance}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.top a{font-size:.85rem;color:var(--muted)}
+.lede{color:var(--muted);margin:6px 0 0;font-size:.92rem}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line)}
+.tab{font:inherit;font-weight:500;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:8px 12px;cursor:pointer}
+.tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--ink)}
+.tab .n{font-family:var(--f-mono);font-size:.78rem;margin-left:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:.82rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:4px 11px;border-radius:99px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--time);outline-offset:2px}
+
+/* stage */
+.stage{display:flex;flex-direction:column;gap:14px;align-items:stretch}
+.pile{position:relative;height:150px;display:flex;align-items:center;justify-content:center}
+.pile .back{position:absolute;width:min(240px,70%);height:130px;border-radius:14px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);
+  background-image:repeating-linear-gradient(45deg,transparent 0 10px,var(--line) 10px 11px)}
+.pile .back:nth-child(1){transform:rotate(-6deg) translateY(4px)}
+.pile .back:nth-child(2){transform:rotate(4deg)}
+.pile .back:nth-child(3){transform:rotate(-1deg);display:flex;align-items:center;justify-content:center;font-family:var(--f-disp);font-size:1.4rem;color:var(--ink);background-color:var(--surface)}
+.btn{font:inherit;font-weight:600;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);padding:11px 18px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn[disabled]{opacity:.4;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row .btn{flex:1 1 auto}
+.meta{font-family:var(--f-mono);font-size:.76rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+
+/* card */
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 16px;display:flex;flex-direction:column;gap:12px;border-top:6px solid var(--accent);animation:deal .45s cubic-bezier(.2,.8,.2,1)}
+.card.L{--accent:var(--life)} .card.T{--accent:var(--time)} .card.M{--accent:var(--money)} .card.F{--accent:var(--free)}
+@keyframes deal{from{opacity:0;transform:translateY(24px) rotate(-3deg) scale(.96)}to{opacity:1;transform:none}}
+.chap{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.04em;color:var(--muted);text-transform:uppercase}
+.card h2{font-family:var(--f-disp);font-size:1.12rem;line-height:1.3;margin:0;text-wrap:balance}
+.plain{font-size:1rem}
+.plain p,.mb p{margin:0 0 8px}
+.cost{font-size:.88rem;color:var(--muted);margin:0}
+.cost b{color:var(--fg);font-weight:500}
+.tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:.7rem;font-weight:600;padding:2px 7px;border-radius:3px;background:var(--line);color:var(--fg)}
+.tag.L{background:var(--life-bg);color:var(--life)} .tag.T{background:var(--time-bg);color:var(--time)}
+.tag.M{background:var(--money-bg);color:var(--money)} .tag.F{background:var(--free-bg);color:var(--free)}
+.tag.top{background:var(--ink);color:var(--bg)} .tag.warn{background:var(--free-bg);color:var(--free)}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.fav{font:inherit;font-weight:600;font-size:.9rem;border:1px solid var(--line);background:transparent;color:var(--fg);padding:8px 12px;border-radius:9px;cursor:pointer}
+.fav[aria-pressed="true"]{background:var(--life-bg);color:var(--life);border-color:var(--life)}
+.more{border-top:1px dashed var(--line);padding-top:10px}
+.more>summary{cursor:pointer;color:var(--time);font-size:.9rem}
+.mb{padding-top:8px;font-size:.9rem;overflow-wrap:anywhere}
+.mb h5{margin:10px 0 4px;font-family:var(--f-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.mb a{color:var(--time)}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.spread{display:flex;flex-direction:column;gap:14px}
+.toast{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:99px;font-size:.85rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+.note{font-size:.8rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.card{animation:none}.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><h1>Колода жизни</h1><a href="./">Все советы списком →</a></div>
+  <p class="lede" style="margin-top:-8px">765 советов из справочника «Жить выгоднее» в виде карточек. Вытягивайте по одной или раскладом из трёх и сохраняйте нужные в избранное.</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="t-deck" aria-selected="true">Колода</button>
+    <button class="tab" role="tab" id="t-fav" aria-selected="false">Избранное<span class="n" id="favn">0</span></button>
+  </div>
+
+  <section id="deck" class="stage" aria-labelledby="t-deck">
+    <div class="chips" role="group" aria-label="Фильтр колоды">
+      <button class="chip" data-r="all" aria-pressed="true">Все</button>
+      <button class="chip" data-r="死亡率" aria-pressed="false">Жизнь</button>
+      <button class="chip" data-r="时间" aria-pressed="false">Время и силы</button>
+      <button class="chip" data-r="金钱" aria-pressed="false">Деньги</button>
+      <button class="chip" data-r="自由" aria-pressed="false">Свобода</button>
+      <button class="chip" id="free" aria-pressed="false">Только бесплатные</button>
+    </div>
+    <div class="pile" aria-hidden="true"><div class="back"></div><div class="back"></div><div class="back">?</div></div>
+    <div class="row">
+      <button class="btn" id="draw">Вытянуть карту</button>
+      <button class="btn ghost" id="three">Расклад из трёх</button>
+      <button class="btn ghost" id="prev" disabled>← Назад</button>
+    </div>
+    <div class="meta"><span id="left"></span><button class="chip" id="shuffle">Перемешать заново</button></div>
+    <div id="out" class="spread" aria-live="polite"></div>
+  </section>
+
+  <section id="favs" hidden aria-labelledby="t-fav">
+    <div class="row" style="margin-bottom:12px"><button class="btn ghost" id="copy">Скопировать список</button><button class="btn ghost" id="clear">Очистить</button></div>
+    <div id="favlist" class="spread"></div>
+  </section>
+
+  <p class="note">Избранное хранится только в вашем браузере на этом устройстве. Перевод неофициальный; конкретные цифры и нормы относятся к материковому Китаю. Перед решениями о здоровье, деньгах и законе сверяйтесь со специалистом. Оригинал: github.com/eternity4719/HowToLiveBetter (CC BY 4.0).</p>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="names.js"></script>
+<script src="data/cards.js"></script>
+<script>
+var LN={'死亡率':'L','时间':'T','金钱':'M','自由':'F'},LR={'死亡率':'Жизнь','时间':'Время','金钱':'Деньги','自由':'Свобода'};
+var MN={'0':'Бесплатно','少':'Недорого','多':'Дорого'},TN={'少':'Быстро','中':'Часы','多':'Каждый день'},WN={'否':'Без усилий воли','些':'Немного воли','是':'Много воли'},BN={'大':'большая','中':'средняя','小':'малая'};
+// card: 0ch 1n 2title 3plain 4cost 5grade 6money 7time 8will 9lvl 10lens 11ratio 12dis
+var C=window.CARDS,byId={};C.forEach(function(c,i){c.i=i;byId[c[0]+'-'+c[1]]=c});
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[x]})}
+function inline(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/(https?:\/\/[^\s<>&]+?)(?=[\s<>]|&lt;|&gt;|$|[;,)]\s)/g,function(u){return '<a href="'+u+'" target="_blank" rel="noopener">'+u+'</a>'})}
+function para(s){return String(s||'').split(/\n+/).filter(Boolean).map(function(p){return '<p>'+inline(p)+'</p>'}).join('')}
+// favorites
+var KEY='vygodnee-fav',favs=[];
+try{favs=JSON.parse(localStorage.getItem(KEY)||'[]').filter(function(k){return byId[k]})}catch(e){favs=[]}
+function saveFavs(){try{localStorage.setItem(KEY,JSON.stringify(favs))}catch(e){}document.getElementById('favn').textContent=favs.length}
+function isFav(k){return favs.indexOf(k)>=0}
+function toast(t){var e=document.getElementById('toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},1600)}
+// details lazy
+function loadDetail(c){return new Promise(function(ok){var ch=c[0];function get(){var d=window.D&&window.D[ch];var it=d&&d.items.filter(function(x){return x[0]===c[1]})[0];ok(it)}
+  if(window.D&&window.D[ch])return get();var s=document.createElement('script');s.src='data/ch'+String(ch).padStart(2,'0')+'.js';s.onload=get;s.onerror=function(){ok(null)};document.head.appendChild(s)})}
+function cardEl(c){
+  var k=c[0]+'-'+c[1],el=document.createElement('article');el.className='card '+(LN[c[10]]||'');el.dataset.k=k;
+  var tg=['<span class="tag '+(LN[c[10]]||'')+'">'+(LR[c[10]]||'')+'</span>','<span class="tag">Доказательность '+c[5]+'</span>'];
+  if(c[11]==='极高')tg.push('<span class="tag top">Очень выгодно</span>');else if(c[11]==='高')tg.push('<span class="tag">Выгодно</span>');
+  if(c[9])tg.push('<span class="tag">Польза: '+BN[c[9]]+'</span>');if(c[12])tg.push('<span class="tag warn">Спорное</span>');
+  var lab=[MN[c[6]],TN[c[7]],WN[c[8]]].filter(Boolean).join(' · ');
+  el.innerHTML='<div class="chap">Раздел '+c[0]+' · '+esc(CHN[c[0]])+' · совет '+c[1]+'</div><h2>'+esc(c[2])+'</h2><div class="plain">'+para(c[3])+'</div>'+
+   '<p class="cost"><b>'+esc(lab)+'.</b> '+esc(c[4])+'</p><div class="tags">'+tg.join('')+'</div>'+
+   '<div class="acts"><button class="fav" aria-pressed="'+isFav(k)+'">'+(isFav(k)?'♥ В избранном':'♡ В избранное')+'</button><button class="fav share">Ссылка</button></div>'+
+   '<details class="more"><summary>Подробнее: выгода, примечание, источники</summary><div class="mb"><p>Загрузка…</p></div></details>';
+  el.querySelector('.more').addEventListener('toggle',function(e){var d=e.target;if(!d.open||d.dataset.l)return;d.dataset.l=1;
+    loadDetail(c).then(function(it){d.querySelector('.mb').innerHTML=it?'<h5>Выгода</h5>'+para(it[4])+(it[5]?'<h5>Примечание</h5>'+para(it[5]):'')+(it[6]?'<h5>Источники</h5>'+para(it[6]):''):'<p>Не удалось загрузить подробности.</p>'})});
+  return el}
+document.addEventListener('click',function(e){
+  var f=e.target.closest('.fav:not(.share)');
+  if(f){var k=f.closest('.card').dataset.k,i=favs.indexOf(k);if(i>=0)favs.splice(i,1);else favs.push(k);saveFavs();
+    document.querySelectorAll('.card[data-k="'+k+'"] .fav:not(.share)').forEach(function(b){var on=isFav(k);b.setAttribute('aria-pressed',on);b.textContent=on?'♥ В избранном':'♡ В избранное'});
+    toast(isFav(k)?'Добавлено в избранное':'Убрано из избранного');if(!document.getElementById('favs').hidden)renderFavs();return}
+  var s=e.target.closest('.share');
+  if(s){var k2=s.closest('.card').dataset.k,u=location.href.split('#')[0]+'#c'+k2;
+    (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(u):Promise.reject()).then(function(){toast('Ссылка скопирована')},function(){toast(u)})}
+});
+// deck
+var res='all',freeOnly=false,queue=[],seen=[],hist=[],pos=-1;
+function pool(){return C.filter(function(c){return (res==='all'||c[10]===res)&&(!freeOnly||(c[6]==='0'&&c[7]==='少'&&c[8]==='否'))})}
+function shuffleDeck(){queue=pool().map(function(c){return c.i});for(var i=queue.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=queue[i];queue[i]=queue[j];queue[j]=t}hist=[];pos=-1;upd();document.getElementById('out').innerHTML=''}
+function upd(){document.getElementById('left').textContent='В колоде: '+queue.length+' из '+pool().length;document.getElementById('prev').disabled=pos<=0}
+function show(arr){var out=document.getElementById('out');out.innerHTML='';arr.forEach(function(c){out.appendChild(cardEl(c))});
+  var first=out.firstChild;if(first&&first.scrollIntoView)first.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'})}
+function take(n){var r=[];for(var i=0;i<n;i++){if(!queue.length)break;r.push(C[queue.shift()])}return r}
+function draw(n){if(!queue.length){var p=pool();if(!p.length){toast('Нет карт по фильтру');return}shuffleDeck();toast('Колода закончилась — перемешал заново')}
+  var cards=take(n);hist.length=pos+1;hist.push(cards);pos=hist.length-1;upd();show(cards);try{history.replaceState(null,'',cards.length===1?'#c'+cards[0][0]+'-'+cards[0][1]:location.pathname)}catch(x){}}
+document.getElementById('draw').onclick=function(){draw(1)};
+document.getElementById('three').onclick=function(){draw(3)};
+document.getElementById('prev').onclick=function(){if(pos>0){pos--;upd();show(hist[pos])}};
+document.getElementById('shuffle').onclick=function(){shuffleDeck();toast('Колода перемешана')};
+document.querySelectorAll('.chip[data-r]').forEach(function(b){b.onclick=function(){res=b.dataset.r;document.querySelectorAll('.chip[data-r]').forEach(function(o){o.setAttribute('aria-pressed',o===b)});shuffleDeck()}});
+document.getElementById('free').onclick=function(){freeOnly=!freeOnly;this.setAttribute('aria-pressed',freeOnly);shuffleDeck()};
+// favorites view
+function renderFavs(){var box=document.getElementById('favlist');box.innerHTML='';
+  if(!favs.length){box.innerHTML='<div class="empty">Пока пусто. Вытяните карту и нажмите «♡ В избранное».</div>';return}
+  favs.forEach(function(k){box.appendChild(cardEl(byId[k]))})}
+document.getElementById('copy').onclick=function(){if(!favs.length){toast('Список пуст');return}
+  var txt=favs.map(function(k){var c=byId[k];return c[0]+'.'+c[1]+' '+c[2]+'\n'+c[3]}).join('\n\n');
+  (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){toast('Список скопирован')},function(){toast('Не удалось скопировать')})};
+document.getElementById('clear').onclick=function(){var b=this;if(b.dataset.s){favs=[];saveFavs();renderFavs();b.textContent='Очистить';delete b.dataset.s;toast('Избранное очищено');return}b.dataset.s=1;b.textContent='Точно очистить?';setTimeout(function(){b.textContent='Очистить';delete b.dataset.s},3000)};
+function tab(f){document.getElementById('deck').hidden=f;document.getElementById('favs').hidden=!f;
+  document.getElementById('t-deck').setAttribute('aria-selected',!f);document.getElementById('t-fav').setAttribute('aria-selected',f);if(f)renderFavs()}
+document.getElementById('t-deck').onclick=function(){tab(false)};document.getElementById('t-fav').onclick=function(){tab(true)};
+saveFavs();shuffleDeck();
+var m=location.hash.match(/^#c(\d+-\d+)$/);if(m&&byId[m[1]]){var c0=byId[m[1]];queue=queue.filter(function(i){return i!==c0.i});hist=[[c0]];pos=0;upd();show([c0])}
+</script>
+</body>
+</html>
