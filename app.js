@@ -60,4 +60,19 @@ document.addEventListener('click',function(e){
 });
 function resetF(){for(var c of KEYS)delete secs[c].dataset.f}
 var qt;document.getElementById('q').addEventListener('input',function(e){clearTimeout(qt);var v=e.target.value.trim().toLowerCase();qt=setTimeout(function(){st.q=v;resetF();upd()},200)});
+
+// docs
+function md(t){var L=t.split('\n'),o=[],ul=false,tb=false;
+  function close(){if(ul){o.push('</ul>');ul=false}if(tb){o.push('</tbody></table></div>');tb=false}}
+  L.forEach(function(l){
+    if(/^\|/.test(l)){if(/^\|[\s:|-]+\|?\s*$/.test(l))return;var cells=l.replace(/^\||\|\s*$/g,'').split('|');
+      if(!tb){close();o.push('<div class="scroll"><table class="dt"><tbody>');tb=true}o.push('<tr>'+cells.map(function(c){return '<td>'+inline(c.trim())+'</td>'}).join('')+'</tr>');return}
+    if(/^\s*([-*]|\d+\.)\s+/.test(l)){if(!ul){close();o.push('<ul>');ul=true}o.push('<li>'+inline(l.replace(/^\s*([-*]|\d+\.)\s+/,''))+'</li>');return}
+    close();var h=l.match(/^(#{1,4})\s+(.*)/);
+    if(h){var k=Math.min(h[1].length+2,5);o.push('<h'+k+'>'+inline(h[2])+'</h'+k+'>')}else if(l.trim())o.push('<p>'+inline(l)+'</p>')});
+  close();return o.join('')}
+var dEl=document.getElementById('docs');
+loadScript('data/docs.js').then(function(){DOCS.forEach(function(d){var title=(d.md.match(/^#\s+(.*)/)||[0,'Статья '+d.id])[1];
+  var x=document.createElement('details');x.className='ch';x.id='d'+d.id;x.innerHTML='<summary><span class="cname">'+esc(title)+'</span></summary><div class="body doc">'+md(d.md.replace(/^#\s+.*\n/,''))+'</div>';dEl.appendChild(x)});
+  var h2=location.hash.match(/^#d(\d)$/);if(h2&&document.getElementById('d'+h2[1]))document.getElementById('d'+h2[1]).open=true});
 var h=location.hash.match(/^#s(\d+)$/);if(h&&secs[+h[1]])secs[+h[1]].open=true;
