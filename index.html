@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Искусство жить</title>
-<meta name="description" content="Русский гайд «Искусство жить» по справочнику «高性价比人生指南»: 765 советов о здоровье, деньгах, законе и семье с оценкой затрат и доказательности.">
+<meta name="description" content="Русский гайд «Искусство жить» по справочнику «高性价比人生指南»: 512 советов о здоровье, деньгах, законе и семье с оценкой затрат и доказательности.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@500;700&display=swap">
 <style>
 /* Layout: шапка со сводкой, карта из 8 групп, липкая панель поиска и фильтров, 34 раскрывающихся раздела с карточками советов. */
@@ -81,6 +81,7 @@ details.ch[open]>summary::before{transform:rotate(90deg)}
 .tag.L{background:var(--life-bg);color:var(--life)} .tag.T{background:var(--time-bg);color:var(--time)}
 .tag.M{background:var(--money-bg);color:var(--money)} .tag.F{background:var(--free-bg);color:var(--free)}
 .tag.warn{background:var(--warn-bg);color:var(--warn)}
+.tag.ru{background:var(--ink);color:var(--bg)}
 .tag.top{background:var(--ink);color:var(--bg)}
 .caveat{font-size:.85rem;background:var(--warn-bg);color:var(--fg);padding:7px 10px;border-radius:6px;max-width:70ch}
 .src{font-size:.78rem;font-family:var(--f-mono)}
@@ -96,10 +97,10 @@ details.ch[open]>summary::before{transform:rotate(90deg)}
 
 <div class="wrap">
 <header>
-  <div class="eyebrow">Русский гайд · 34 раздела · 765 советов</div>
+  <div class="eyebrow">Русский гайд · 31 раздел · 512 советов</div>
   <h1 style="margin-top:8px">Искусство жить</h1>
-  <p class="lede">Справочник «高性价比人生指南»: у каждого совета указано, что придётся потратить и что удастся сохранить. Здесь полный перевод: 765 советов с затратами, пользой простыми словами, подробной выгодой, примечаниями, классом доказательности (A, B, C) и источниками, плюс 9 длинных статей.</p>
-  <p class="note" style="margin-top:10px">Перевод неофициальный, сделан без редактора-носителя: возможны неточности, цифры и нормы действуют для материкового Китая и могут устареть. Перед решениями о здоровье, деньгах и законе сверяйтесь с врачом, юристом и местными правилами. Оригинал: github.com/eternity4719/HowToLiveBetter (CC BY 4.0).</p>
+  <p class="lede">Русская версия справочника «高性价比人生指南» (Китай): у каждого совета указано, что придётся потратить и что удастся сохранить. Из 765 исходных советов 134 универсальны и оставлены как есть, 378 переписаны под российские реалии (ТК РФ, ОМС, Госуслуги, ОСАГО и др.), 253 китайских совета без российского аналога убраны.</p>
+  <p class="note" style="margin-top:10px">Адаптированные советы помечены «Адаптировано для РФ»: нормы и цифры искали и перепроверяли по открытым российским источникам (ссылки в блоке «Источники»), но право меняется быстро. Это не юридическая и не медицинская консультация: перед решением сверяйтесь с актуальной редакцией закона, врачом или юристом. Научные данные в универсальных советах взяты из оригинала. Оригинал: github.com/eternity4719/HowToLiveBetter (CC BY 4.0); перевод и адаптация неофициальные.</p>
 </header>
 
 <p><a href="cards.html" style="font-weight:600">🂠 Колода жизни: советы в виде случайных карточек с избранным →</a></p>
@@ -121,6 +122,7 @@ details.ch[open]>summary::before{transform:rotate(90deg)}
       <button class="chip" data-g="grade" data-v="A" aria-pressed="false">A</button>
       <button class="chip" data-g="grade" data-v="B" aria-pressed="false">B</button>
       <button class="chip" data-g="grade" data-v="C" aria-pressed="false">C</button>
+      <button class="chip" data-g="grade" data-v="РФ" aria-pressed="false">Адаптировано для РФ</button>
       <span class="lab" style="margin-left:8px">Ещё</span>
       <button class="chip" data-g="top" data-v="1" aria-pressed="false">Очень выгодно</button>
       <button class="chip" data-g="free" data-v="1" aria-pressed="false">Бесплатно</button>
@@ -131,9 +133,7 @@ details.ch[open]>summary::before{transform:rotate(90deg)}
   <div id="chapters" style="display:flex;flex-direction:column;gap:10px"></div>
 </section>
 
-<section><h2 style="margin-bottom:12px">Длинные статьи</h2><div id="docs" style="display:flex;flex-direction:column;gap:10px"></div></section>
-
-<footer class="note">Классы доказательности: A — число из метаанализа, большого наблюдения или рандомизированного испытания; B — исследования есть, точного числа нет; C — опыт автора или общее мнение. «Очень выгодно» — большая польза при нулевых затратах денег, времени и воли (оценка автора, не доказательство). Это не руководство к действию, а список на выбор: достаточно взять одну–две вещи.</footer>
+<footer class="note">Классы доказательности (для универсальных советов): A — число из метаанализа, большого наблюдения или рандомизированного испытания; B — исследования есть, точного числа нет; C — опыт автора или общее мнение. «Очень выгодно» — большая польза при нулевых затратах денег, времени и воли (оценка автора оригинала). Это список на выбор, а не обязательный план: достаточно взять одну–две вещи. Ссылки вида «раздел X, совет Y» ведут на советы исходной книги, часть из которых убрана.</footer>
 </div>
 
 <script src="names.js"></script>

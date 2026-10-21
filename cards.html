@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Искусство жить — колода советов</title>
-<meta name="description" content="Вытягивайте случайные карточки из 765 советов справочника «Искусство жить» и сохраняйте нужные в избранное.">
+<meta name="description" content="Вытягивайте случайные карточки из 512 советов справочника «Искусство жить» и сохраняйте нужные в избранное.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@500;700&display=swap">
 <style>
 /* Layout: одна колонка. Сверху вкладки и фильтры, в центре стопка карт и открытая карта, снизу кнопки действий. */
@@ -76,6 +76,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 .tag{font-size:.7rem;font-weight:600;padding:2px 7px;border-radius:3px;background:var(--line);color:var(--fg)}
 .tag.L{background:var(--life-bg);color:var(--life)} .tag.T{background:var(--time-bg);color:var(--time)}
 .tag.M{background:var(--money-bg);color:var(--money)} .tag.F{background:var(--free-bg);color:var(--free)}
+.tag.ru{background:var(--ink);color:var(--bg)}
 .tag.top{background:var(--ink);color:var(--bg)} .tag.warn{background:var(--free-bg);color:var(--free)}
 .acts{display:flex;gap:8px;flex-wrap:wrap}
 .fav{font:inherit;font-weight:600;font-size:.9rem;border:1px solid var(--line);background:transparent;color:var(--fg);padding:8px 12px;border-radius:9px;cursor:pointer}
@@ -96,7 +97,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
 <body>
 <div class="wrap">
   <div class="top"><h1>Искусство жить</h1><a href="./">Все советы списком →</a></div>
-  <p class="lede" style="margin-top:-8px">765 советов из справочника «Искусство жить» в виде карточек. Вытягивайте по одной или раскладом из трёх и сохраняйте нужные в избранное.</p>
+  <p class="lede" style="margin-top:-8px">512 советов из справочника «Искусство жить» в виде карточек. Вытягивайте по одной или раскладом из трёх и сохраняйте нужные в избранное.</p>
 
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" id="t-deck" aria-selected="true">Колода</button>
@@ -127,7 +128,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
     <div id="favlist" class="spread"></div>
   </section>
 
-  <p class="note">Избранное хранится только в вашем браузере на этом устройстве. Перевод неофициальный; конкретные цифры и нормы относятся к материковому Китаю. Перед решениями о здоровье, деньгах и законе сверяйтесь со специалистом. Оригинал: github.com/eternity4719/HowToLiveBetter (CC BY 4.0).</p>
+  <p class="note">Избранное хранится только в вашем браузере на этом устройстве. Версия для России: 378 советов адаптированы под российские нормы и помечены, но право и цены меняются, поэтому перед решением сверяйтесь с актуальным законом, врачом или юристом. Оригинал: github.com/eternity4719/HowToLiveBetter (CC BY 4.0).</p>
 </div>
 <div class="toast" id="toast" role="status"></div>
 <script src="names.js"></script>
@@ -151,7 +152,7 @@ function loadDetail(c){return new Promise(function(ok){var ch=c[0];function get(
   if(window.D&&window.D[ch])return get();var s=document.createElement('script');s.src='data/ch'+String(ch).padStart(2,'0')+'.js';s.onload=get;s.onerror=function(){ok(null)};document.head.appendChild(s)})}
 function cardEl(c){
   var k=c[0]+'-'+c[1],el=document.createElement('article');el.className='card '+(LN[c[10]]||'');el.dataset.k=k;
-  var tg=['<span class="tag '+(LN[c[10]]||'')+'">'+(LR[c[10]]||'')+'</span>','<span class="tag">Доказательность '+c[5]+'</span>'];
+  var tg=['<span class="tag '+(LN[c[10]]||'')+'">'+(LR[c[10]]||'')+'</span>',(c[5]==='РФ'?'<span class="tag ru">Адаптировано для РФ</span>':'<span class="tag">Доказательность '+c[5]+'</span>')];
   if(c[11]==='极高')tg.push('<span class="tag top">Очень выгодно</span>');else if(c[11]==='高')tg.push('<span class="tag">Выгодно</span>');
   if(c[9])tg.push('<span class="tag">Польза: '+BN[c[9]]+'</span>');if(c[12])tg.push('<span class="tag warn">Спорное</span>');
   var lab=[MN[c[6]],TN[c[7]],WN[c[8]]].filter(Boolean).join(' · ');
