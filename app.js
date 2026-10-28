@@ -74,5 +74,5 @@ function md(t){var L=t.split('\n'),o=[],ul=false,tb=false;
 var dEl=document.getElementById('docs');
 loadScript('data/docs.js').then(function(){DOCS.forEach(function(d){var title=(d.md.match(/^#\s+(.*)/)||[0,'Статья '+d.id])[1];
   var x=document.createElement('details');x.className='ch';x.id='d'+d.id;x.innerHTML='<summary><span class="cname">'+esc(title)+'</span></summary><div class="body doc">'+md(d.md.replace(/^#\s+.*\n/,''))+'</div>';dEl.appendChild(x)});
-  var h2=location.hash.match(/^#d(\d)$/);if(h2&&document.getElementById('d'+h2[1]))document.getElementById('d'+h2[1]).open=true});
-var h=location.hash.match(/^#s(\d+)$/);if(h&&secs[+h[1]])secs[+h[1]].open=true;
+  var h2=location.hash.match(/^#d(\d)$/);if(h2&&document.getElementById('d'+h2[1]))(function(e){e.open=true;setTimeout(function(){e.scrollIntoView({block:'start'})},60)})(document.getElementById('d'+h2[1]))});
+var h=location.hash.match(/^#s(\d+)$/);if(h&&secs[+h[1]]){secs[+h[1]].open=true;setTimeout(function(){secs[+h[1]].scrollIntoView({block:'start'})},60)}
