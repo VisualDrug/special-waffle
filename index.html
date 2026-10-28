@@ -3,142 +3,127 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Искусство жить</title>
-<meta name="description" content="Русский гайд «Искусство жить» по справочнику «高性价比人生指南»: 512 советов о здоровье, деньгах, законе и семье с оценкой затрат и доказательности.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@500;700&display=swap">
-<style>
-/* Layout: шапка со сводкой, карта из 8 групп, липкая панель поиска и фильтров, 34 раскрывающихся раздела с карточками советов. */
-:root{
-  --bg:#f3f4f2; --surface:#ffffff; --fg:#17201d; --muted:#5b6762; --line:#d5dad6;
-  --life:#c0392b; --time:#2d6cb0; --money:#2a8453; --free:#a86d12;
-  --life-bg:#f8e3df; --time-bg:#dfeaf6; --money-bg:#dff0e6; --free-bg:#f5e9d3;
-  --ink:#1d3a34; --warn:#9a5b00; --warn-bg:#fbefd5;
-  --f-disp:'Unbounded','Golos Text',system-ui,sans-serif;
-  --f-body:'Golos Text',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
-}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#121816; --surface:#1a2320; --fg:#e6ece8; --muted:#97a5a0; --line:#2e3b36;
-  --life:#ec7a6c; --time:#7fb0e6; --money:#6cc592; --free:#e0aa55;
-  --life-bg:#3a2320; --time-bg:#1f2f42; --money-bg:#1d3629; --free-bg:#3b2f18;
-  --ink:#a8d6c8; --warn:#e0aa55; --warn-bg:#3b2f18; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#121816; --surface:#1a2320; --fg:#e6ece8; --muted:#97a5a0; --line:#2e3b36;
-  --life:#ec7a6c; --time:#7fb0e6; --money:#6cc592; --free:#e0aa55;
-  --life-bg:#3a2320; --time-bg:#1f2f42; --money-bg:#1d3629; --free-bg:#3b2f18;
-  --ink:#a8d6c8; --warn:#e0aa55; --warn-bg:#3b2f18; color-scheme:dark}
-html{background:var(--bg)}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
-.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
-h1,h2,h3{font-family:var(--f-disp);font-weight:700;text-wrap:balance;margin:0;line-height:1.2}
-h1{font-size:clamp(1.6rem,4.5vw,2.4rem)}
-h2{font-size:1.15rem}
-p{margin:0}
-.eyebrow{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.lede{max-width:66ch;color:var(--muted);margin-top:10px}
-.note{font-size:.84rem;color:var(--muted);max-width:78ch}
-a{color:var(--time)}
+<title>Искусство жить: 512 советов для жизни в России</title>
+<meta name="description" content="Справочник советов о здоровье, деньгах, работе и семье для России. У каждого совета указано, сколько он стоит и что даёт, и насколько это доказано.">
 
-/* map */
-.map{display:flex;flex-direction:column;gap:18px}
-.grp{display:flex;flex-direction:column;gap:8px}
-.grp h3{font-size:.95rem;border-bottom:2px solid var(--ink);padding-bottom:5px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
-.grp h3 small{font-family:var(--f-mono);font-weight:400;font-size:.75rem;color:var(--muted)}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.mchip{font:inherit;font-size:.82rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:5px 10px;border-radius:6px;cursor:pointer;text-align:left;display:inline-flex;gap:7px;align-items:baseline}
-.mchip b{font-family:var(--f-mono);font-weight:500;color:var(--muted);font-size:.74rem}
-.mchip:hover{border-color:var(--ink)}
-
-/* toolbar */
-.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line)}
-.search{font:inherit;font-size:1rem;width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg)}
-.search:focus-visible,.chip:focus-visible,.mchip:focus-visible,summary:focus-visible{outline:2px solid var(--time);outline-offset:2px}
-.frow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.frow .lab{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:2px}
-.chip{font:inherit;font-size:.82rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:4px 11px;border-radius:99px;cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.count{font-size:.82rem;color:var(--muted);font-family:var(--f-mono)}
-
-/* chapters */
-details.ch{border:1px solid var(--line);border-radius:8px;background:var(--surface)}
-details.ch>summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
-details.ch>summary::-webkit-details-marker{display:none}
-details.ch>summary::before{content:"▸";color:var(--muted);transition:transform .15s}
-details.ch[open]>summary::before{transform:rotate(90deg)}
-.cnum{font-family:var(--f-mono);font-size:.78rem;background:var(--ink);color:var(--bg);border-radius:4px;padding:2px 7px}
-.cname{font-weight:600}
-.ccnt{margin-left:auto;font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
-.list{display:flex;flex-direction:column;gap:10px}
-.card{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
-.card h4{margin:0;font-size:1rem;font-weight:600;line-height:1.35;display:flex;gap:9px;align-items:baseline}
-.card h4 span{font-family:var(--f-mono);font-size:.76rem;font-weight:500;color:var(--muted);flex:none}
-.plain{max-width:70ch}
-.cost{font-size:.88rem;color:var(--muted);max-width:70ch}
-.cost b{color:var(--fg);font-weight:500}
-.tags{display:flex;gap:5px;flex-wrap:wrap}
-.tag{font-size:.7rem;font-weight:600;padding:2px 7px;border-radius:3px;background:var(--line);color:var(--fg)}
-.tag.L{background:var(--life-bg);color:var(--life)} .tag.T{background:var(--time-bg);color:var(--time)}
-.tag.M{background:var(--money-bg);color:var(--money)} .tag.F{background:var(--free-bg);color:var(--free)}
-.tag.warn{background:var(--warn-bg);color:var(--warn)}
-.tag.ru{background:var(--ink);color:var(--bg)}
-.tag.top{background:var(--ink);color:var(--bg)}
-.caveat{font-size:.85rem;background:var(--warn-bg);color:var(--fg);padding:7px 10px;border-radius:6px;max-width:70ch}
-.src{font-size:.78rem;font-family:var(--f-mono)}
-.intro{background:var(--surface);border-left:3px solid var(--ink);padding:4px 14px;margin:4px 12px 10px;font-size:.9rem;color:var(--muted)}
-.body{padding:2px 12px 14px}.body .list{padding:0}.more>summary{cursor:pointer;font-size:.85rem;color:var(--time)}.more .mb{padding-top:8px;font-size:.88rem}.more h5{margin:10px 0 4px;font-size:.72rem;font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.more p{margin:0 0 6px;max-width:72ch;overflow-wrap:anywhere}.doc{max-width:72ch}.doc h3,.doc h4,.doc h5{margin:14px 0 6px;font-family:var(--f-body)}.doc ul{padding-left:20px}.scroll{overflow-x:auto}.dt{border-collapse:collapse;font-size:.85rem}.dt td{border:1px solid var(--line);padding:5px 8px;vertical-align:top}
-.empty{padding:28px;text-align:center;color:var(--muted)}
-@media (max-width:520px){.ccnt{margin-left:0;flex-basis:100%}}
-@media (prefers-reduced-motion:reduce){details.ch>summary::before{transition:none}}
-</style>
+<link rel="canonical" href="https://visualdrug.github.io/special-waffle/">
+<meta property="og:type" content="website"><meta property="og:locale" content="ru_RU"><meta property="og:site_name" content="Искусство жить">
+<meta property="og:title" content="Искусство жить: 512 советов для жизни в России"><meta property="og:description" content="Справочник советов о здоровье, деньгах, работе и семье для России. У каждого совета указано, сколько он стоит и что даёт, и насколько это доказано."><meta property="og:url" content="https://visualdrug.github.io/special-waffle/"><meta property="og:image" content="https://visualdrug.github.io/special-waffle/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23131209'/%3E%3Crect x='17' y='14' width='30' height='38' rx='5' fill='%23B6F36B'/%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Это медицинская или юридическая консультация?", "acceptedAnswer": {"@type": "Answer", "text": "Нет. Справочник помогает сориентироваться и задать врачу или юристу правильные вопросы. Решения о здоровье, деньгах и праве принимайте с профильным специалистом и по актуальной редакции закона."}}, {"@type": "Question", "name": "Откуда взяты советы?", "acceptedAnswer": {"@type": "Answer", "text": "Это русская версия китайского справочника «高性价比人生指南» (проект eternity4719/HowToLiveBetter на GitHub, лицензия CC BY 4.0). В оригинале у каждого совета есть оценка затрат, польза, класс доказательности и ссылки на исследования и официальные документы."}}, {"@type": "Question", "name": "Почему советов 512, а не 765?", "acceptedAnswer": {"@type": "Answer", "text": "Из 765 исходных советов 134 универсальны и оставлены как есть. Ещё 378 касались китайских норм и переписаны под российские реалии. 253 совета описывали китайскую специфику без российского аналога, поэтому их убрали."}}, {"@type": "Question", "name": "Как проверялись российские нормы?", "acceptedAnswer": {"@type": "Answer", "text": "Перевод и адаптацию сделал ИИ без редактора носителя языка. Для каждого адаптированного совета нормы искались по открытым российским источникам, затем второй проход независимо перепроверял суммы, сроки и ссылки. Исправлено 190 советов из 378. Что подтвердить не удалось, помечено словами «Проверьте актуальную норму». Ошибки всё равно возможны."}}, {"@type": "Question", "name": "Что значат классы A, B и C?", "acceptedAnswer": {"@type": "Answer", "text": "A: есть конкретное число из метаанализа, большого наблюдения или рандомизированного испытания. B: исследования есть, но точного числа нет. C: опыт автора или общее мнение. Класс показан у универсальных советов, у адаптированных стоит пометка «Адаптировано для РФ» и список источников."}}, {"@type": "Question", "name": "Где хранится избранное?", "acceptedAnswer": {"@type": "Answer", "text": "Только в браузере на вашем устройстве. Сайт не отправляет список на сервер и не требует регистрации. Если очистить данные сайта, избранное пропадёт, поэтому список можно скопировать текстом."}}, {"@type": "Question", "name": "Это бесплатно?", "acceptedAnswer": {"@type": "Answer", "text": "Да. Без регистрации, подписки и рекламы."}}, {"@type": "Question", "name": "Как сообщить об ошибке или устаревшей норме?", "acceptedAnswer": {"@type": "Answer", "text": "Откройте обращение на GitHub: github.com/VisualDrug/special-waffle/issues. Укажите номер совета в формате «раздел.совет» и что именно устарело."}}, {"@type": "Question", "name": "Можно ли использовать тексты?", "acceptedAnswer": {"@type": "Answer", "text": "Да, на условиях CC BY 4.0: укажите оригинал «高性价比人生指南» (eternity4719), приложите ссылку на лицензию и отметьте, что текст изменён."}}]}</script>
 </head>
 <body>
+<a class="skip" href="#main">Перейти к содержимому</a>
+<header class="nav-wrap"><nav class="nav" aria-label="Основная навигация">
+<a class="brand" href="index.html" aria-current="page">Искусство жить</a>
+<div class="links"><a href="guide.html">Советы</a><a href="cards.html">Колода</a><a href="index.html#faq">Вопросы</a></div>
+<a class="btn sm" href="cards.html" style="display:none" id="navcta">Вытянуть карту</a>
+<button class="icon-btn" id="theme" type="button" aria-label="Сменить тему"></button>
+<button class="icon-btn burger" id="burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="mmenu"><span></span><span></span></button>
+</nav></header>
+<div class="mmenu" id="mmenu" aria-hidden="true"><a href="index.html">Главная</a><a href="guide.html">Советы</a><a href="cards.html">Колода</a><a href="index.html#faq">Вопросы</a></div>
+<style>@media (min-width:768px){#navcta{display:inline-flex!important}}</style>
 
-
-<div class="wrap">
-<header>
-  <div class="eyebrow">Русский гайд · 31 раздел · 512 советов</div>
-  <h1 style="margin-top:8px">Искусство жить</h1>
-  <p class="lede">Русская версия справочника «高性价比人生指南» (Китай): у каждого совета указано, что придётся потратить и что удастся сохранить. Из 765 исходных советов 134 универсальны и оставлены как есть, 378 переписаны под российские реалии (ТК РФ, ОМС, Госуслуги, ОСАГО и др.), 253 китайских совета без российского аналога убраны. Ниже девять длинных статей о главных жизненных ситуациях.</p>
-  <p class="note" style="margin-top:10px">Адаптированные советы помечены «Адаптировано для РФ»: нормы и цифры искали и перепроверяли по открытым российским источникам (ссылки в блоке «Источники»), но право меняется быстро. Это не юридическая и не медицинская консультация: перед решением сверяйтесь с актуальной редакцией закона, врачом или юристом. Научные данные в универсальных советах взяты из оригинала. Оригинал: github.com/eternity4719/HowToLiveBetter (CC BY 4.0); перевод и адаптация неофициальные.</p>
-</header>
-
-<p><a href="cards.html" style="font-weight:600">🂠 Колода жизни: советы в виде случайных карточек с избранным →</a></p>
-
-<section>
-  <h2 style="margin-bottom:12px">Карта разделов</h2>
-  <div class="map" id="map"></div>
-</section>
-
-<section style="display:flex;flex-direction:column;gap:12px" id="guide">
-  <div class="bar" role="search">
-    <input id="q" class="search" type="search" placeholder="Поиск по советам: «зубы», «залог», «ожог»…" aria-label="Поиск по советам" autocomplete="off">
-    <div class="frow"><span class="lab">Ресурс</span>
-      <button class="chip" data-g="lens" data-v="死亡率" aria-pressed="false">Жизнь</button>
-      <button class="chip" data-g="lens" data-v="时间" aria-pressed="false">Время и силы</button>
-      <button class="chip" data-g="lens" data-v="金钱" aria-pressed="false">Деньги</button>
-      <button class="chip" data-g="lens" data-v="自由" aria-pressed="false">Свобода</button></div>
-    <div class="frow"><span class="lab">Доказательность</span>
-      <button class="chip" data-g="grade" data-v="A" aria-pressed="false">A</button>
-      <button class="chip" data-g="grade" data-v="B" aria-pressed="false">B</button>
-      <button class="chip" data-g="grade" data-v="C" aria-pressed="false">C</button>
-      <button class="chip" data-g="grade" data-v="РФ" aria-pressed="false">Адаптировано для РФ</button>
-      <span class="lab" style="margin-left:8px">Ещё</span>
-      <button class="chip" data-g="top" data-v="1" aria-pressed="false">Очень выгодно</button>
-      <button class="chip" data-g="free" data-v="1" aria-pressed="false">Бесплатно</button>
-      <button class="chip" data-g="dis" data-v="1" aria-pressed="false">Спорное</button>
-      <button class="chip" id="reset" aria-pressed="false">Сбросить</button></div>
-    <div class="count" id="count" aria-live="polite"></div>
+<main id="main">
+<section class="hero"><div class="container hero-grid">
+  <div class="stack g-300">
+    <span class="eyebrow">Справочник советов для жизни в России</span>
+    <h1>Меньше лишних трат и рисков, больше спокойных лет</h1>
+    <p class="lead">512 советов о здоровье, деньгах, работе и семье. У каждого сказано, сколько он стоит в деньгах, времени и силе воли, что вы получите взамен и насколько это доказано.</p>
+    <div class="stack g-100" style="align-items:flex-start">
+      <a class="btn" href="cards.html">Вытянуть первую карту <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+      <span class="hero-note">Бесплатно, без регистрации и без рекламы</span>
+    </div>
+    <p class="proof"><span><b>512</b> советов</span><span><b>31</b> раздел</span><span><b>378</b> адаптированы под российские нормы</span></p>
   </div>
-  <div id="chapters" style="display:flex;flex-direction:column;gap:10px"></div>
-</section>
+  <div class="card sample" aria-label="Пример карточки из справочника">
+    <div class="chap">Раздел 1 · Не умереть раньше времени · совет 7</div>
+    <h2 style="font-size:20px;line-height:28px">Измеряйте давление и, если оно повышено, идите к врачу и снижайте его до целевого уровня</h2>
+    <p>Каждые 10 мм рт. ст. снижения верхнего давления уменьшают риск крупных болезней сердца и сосудов на 20%, инсульта на 27%, смерти на 13%.</p>
+    <p class="cost"><b>Недорого · Быстро · Немного воли.</b> Домашний тонометр покупается один раз, измерение занимает минуту. Принимать лекарства нужно и без симптомов.</p>
+    <div class="tags"><span class="tag L">Жизнь</span><span class="tag">Доказательность A</span><span class="tag top">Очень выгодно</span></div>
+  </div>
+</div></section>
 
-<section><h2 style="margin-bottom:12px">Длинные статьи</h2><div id="docs" style="display:flex;flex-direction:column;gap:10px"></div></section>
+<section class="section" aria-label="Главная мысль"><div class="container">
+  <p class="tagline" data-tagline>Не нужно менять жизнь целиком. Достаточно выбрать одну вещь, которая бережёт здоровье или деньги, и сделать её сегодня.</p>
+</div></section>
 
-<footer class="note">Классы доказательности (для универсальных советов): A — число из метаанализа, большого наблюдения или рандомизированного испытания; B — исследования есть, точного числа нет; C — опыт автора или общее мнение. «Очень выгодно» — большая польза при нулевых затратах денег, времени и воли (оценка автора оригинала). Это список на выбор, а не обязательный план: достаточно взять одну–две вещи. Ссылки вида «раздел X, совет Y» ведут на советы исходной книги, часть из которых убрана.</footer>
-</div>
+<section class="section" id="problem"><div class="container stack g-600">
+  <div class="stack g-100 reveal"><span class="eyebrow">Зачем это нужно</span><h2 class="h" style="max-width:680px">Советов в сети много. Цену и доказательства видно редко.</h2></div>
+  <div class="two">
+    <div class="card reveal"><h3 class="h">Как обычно</h3>
+      <ul class="stack g-75" style="margin:0;padding-left:24px"><li>Обещают результат и молчат о цене.</li><li>Не отличают исследование от чужого мнения.</li><li>Нормы давно устарели, а ссылок нет.</li></ul></div>
+    <div class="card reveal"><h3 class="h">Как здесь</h3>
+      <ul class="stack g-75" style="margin:0;padding-left:24px"><li>У каждого совета три оси затрат: деньги, время, сила воли.</li><li>Класс доказательности A, B или C и ссылки на источники.</li><li>Для российских норм указаны статья закона и первоисточник.</li></ul></div>
+  </div>
+</div></section>
 
-<script src="names.js"></script>
-<script src="app.js"></script>
-</body>
-</html>
+<section class="section" id="benefits"><div class="container stack g-600">
+  <div class="stack g-100 reveal"><span class="eyebrow">Что внутри</span><h2 class="h" style="max-width:680px">Каждый совет можно взвесить за минуту</h2></div>
+  <div class="grid4">
+    <div class="feature reveal"><i class="ph ph-coins" aria-hidden="true"></i><h3>Цена видна заранее</h3><p>Метки «Бесплатно», «Быстро», «Без усилий воли» показывают, во что обойдётся совет, ещё до чтения.</p></div>
+    <div class="feature reveal"><i class="ph ph-flask" aria-hidden="true"></i><h3>Доказательность по шкале</h3><p>Класс A означает число из метаанализа или крупного исследования. Класс C означает опыт автора.</p></div>
+    <div class="feature reveal"><i class="ph ph-scales" aria-hidden="true"></i><h3>Нормы для России</h3><p>378 советов переписаны под ТК РФ, ОМС, Госуслуги, ОСАГО и другие российские правила, с ссылками на первоисточники.</p></div>
+    <div class="feature reveal"><i class="ph ph-cards" aria-hidden="true"></i><h3>Колода и избранное</h3><p>Тяните случайные карточки по одной или тремя сразу, сохраняйте нужное и копируйте список текстом.</p></div>
+  </div>
+</div></section>
+
+<section class="section" id="how"><div class="container stack g-600">
+  <div class="stack g-100 reveal"><span class="eyebrow">Как это работает</span><h2 class="h">Три шага от карточки до дела</h2></div>
+  <div class="steps">
+    <div class="step reveal"><span class="n">Шаг 1</span><h3 class="h">Вытяните карту</h3><p class="muted">Возьмите случайный совет или отфильтруйте колоду: жизнь, время, деньги, свобода, только бесплатные.</p></div>
+    <div class="step reveal"><span class="n">Шаг 2</span><h3 class="h">Оцените цену и пользу</h3><p class="muted">Прочитайте затраты, ожидаемый результат и класс доказательности. Раскройте источники, если хотите проверить.</p></div>
+    <div class="step reveal"><span class="n">Шаг 3</span><h3 class="h">Сохраните нужное</h3><p class="muted">Добавьте совет в избранное, скопируйте ссылку на карточку или весь список и сделайте первый шаг сегодня.</p></div>
+  </div>
+</div></section>
+
+<section class="section" id="proof"><div class="container stack g-600">
+  <div class="stack g-100 reveal"><span class="eyebrow">Из чего сделан справочник</span><h2 class="h" style="max-width:680px">Числа, которые можно проверить</h2></div>
+  <div class="stats reveal">
+    <div class="stat"><b>765</b><span>советов в китайском оригинале</span></div>
+    <div class="stat"><b>134</b><span>универсальных оставлено без изменений</span></div>
+    <div class="stat"><b>378</b><span>переписаны под российские нормы</span></div>
+    <div class="stat"><b>2508</b><span>ссылок на первоисточники в оригинале</span></div>
+  </div>
+  <p class="muted reveal" style="max-width:680px">Российские нормы искали по открытым источникам, а затем независимо перепроверяли. На втором проходе исправлено 190 из 378 адаптированных советов. Что не подтвердилось, помечено «Проверьте актуальную норму».</p>
+</div></section>
+
+<section class="section" id="topics"><div class="container stack g-600">
+  <div class="stack g-100 reveal"><span class="eyebrow">Темы</span><h2 class="h">Выберите область жизни</h2></div>
+  <div class="grid3"><a class="topic reveal" href="guide.html#s1"><b>Здоровье и выживание</b><span>Давление, прививки, курение, экстренные ситуации и домашняя аптечка</span><span class="t-sm" style="color:var(--accent);font-weight:600">158 советов</span></a><a class="topic reveal" href="guide.html#s3"><b>Силы, время, отдых</b><span>Сон, внимание, привычки и способы отдохнуть так, чтобы это помогало</span><span class="t-sm" style="color:var(--accent);font-weight:600">51 советов</span></a><a class="topic reveal" href="guide.html#s5"><b>Деньги и быт</b><span>Кредиты, страховки, подписки, жильё и безопасность аккаунтов</span><span class="t-sm" style="color:var(--accent);font-weight:600">93 советов</span></a><a class="topic reveal" href="guide.html#s8"><b>Закон и свобода</b><span>ДТП, мошенники, долги и красные линии, о которых нужно знать</span><span class="t-sm" style="color:var(--accent);font-weight:600">76 советов</span></a><a class="topic reveal" href="guide.html#s12"><b>Работа и дело</b><span>Увольнение, отпуск, свой бизнес и учёба, которая окупается</span><span class="t-sm" style="color:var(--accent);font-weight:600">34 советов</span></a><a class="topic reveal" href="guide.html#s10"><b>Семья</b><span>Брак, беременность, дети и пожилые родные</span><span class="t-sm" style="color:var(--accent);font-weight:600">72 советов</span></a><a class="topic reveal" href="guide.html#s21"><b>За границей</b><span>Поездки и документы за рубежом</span><span class="t-sm" style="color:var(--accent);font-weight:600">5 советов</span></a><a class="topic reveal" href="guide.html#s29"><b>Тяжёлые удары и инвалидность</b><span>Утрата, тяжёлый диагноз и жизнь после инвалидности</span><span class="t-sm" style="color:var(--accent);font-weight:600">23 советов</span></a></div>
+</div></section>
+
+<section class="section" id="articles"><div class="container stack g-600">
+  <div class="stack g-100 reveal"><span class="eyebrow">Длинные статьи</span><h2 class="h" style="max-width:680px">Девять ситуаций, которые стоит разобрать подробно</h2></div>
+  <div class="grid3"><a class="topic reveal" href="guide.html#d1"><b>Что делать в первую очередь, если вас уволили или сократили</b><span>Длинная статья с шагами, сроками и ссылками на законы</span></a><a class="topic reveal" href="guide.html#d2"><b>Перед сменой работы или города: какие дела оформить и какие счета посчитать</b><span>Длинная статья с шагами, сроками и ссылками на законы</span></a><a class="topic reveal" href="guide.html#d3"><b>Дела до и после рождения ребёнка</b><span>Длинная статья с шагами, сроками и ссылками на законы</span></a><a class="topic reveal" href="guide.html#d4"><b>Если поставили диагноз хронической болезни: что делать первым делом</b><span>Длинная статья с шагами, сроками и ссылками на законы</span></a><a class="topic reveal" href="guide.html#d5"><b>Стоит ли жениться</b><span>Длинная статья с шагами, сроками и ссылками на законы</span></a><a class="topic reveal" href="guide.html#d6"><b>Увидел на улице человека в беде: остановиться или пройти мимо</b><span>Длинная статья с шагами, сроками и ссылками на законы</span></a><a class="topic reveal" href="guide.html#d7"><b>Как тело узнаёт время и почему ночные смены вредят здоровью</b><span>Длинная статья с шагами, сроками и ссылками на законы</span></a><a class="topic reveal" href="guide.html#d8"><b>Список домашнего аварийного снаряжения: что купить, где хранить, как часто проверять</b><span>Длинная статья с шагами, сроками и ссылками на законы</span></a><a class="topic reveal" href="guide.html#d9"><b>Какие документы нужны сайту или онлайн-платформе в России</b><span>Длинная статья с шагами, сроками и ссылками на законы</span></a></div>
+</div></section>
+
+<section class="section faq" id="faq"><div class="container stack g-600">
+  <div class="stack g-100 reveal"><span class="eyebrow">Вопросы</span><h2 class="h">Частые вопросы</h2></div>
+  <div class="reveal" style="max-width:800px"><details><summary><span>Это медицинская или юридическая консультация?</span><i class="ph ph-caret-down" aria-hidden="true"></i></summary><div class="a">Нет. Справочник помогает сориентироваться и задать врачу или юристу правильные вопросы. Решения о здоровье, деньгах и праве принимайте с профильным специалистом и по актуальной редакции закона.</div></details><details><summary><span>Откуда взяты советы?</span><i class="ph ph-caret-down" aria-hidden="true"></i></summary><div class="a">Это русская версия китайского справочника «高性价比人生指南» (проект eternity4719/HowToLiveBetter на GitHub, лицензия CC BY 4.0). В оригинале у каждого совета есть оценка затрат, польза, класс доказательности и ссылки на исследования и официальные документы.</div></details><details><summary><span>Почему советов 512, а не 765?</span><i class="ph ph-caret-down" aria-hidden="true"></i></summary><div class="a">Из 765 исходных советов 134 универсальны и оставлены как есть. Ещё 378 касались китайских норм и переписаны под российские реалии. 253 совета описывали китайскую специфику без российского аналога, поэтому их убрали.</div></details><details><summary><span>Как проверялись российские нормы?</span><i class="ph ph-caret-down" aria-hidden="true"></i></summary><div class="a">Перевод и адаптацию сделал ИИ без редактора носителя языка. Для каждого адаптированного совета нормы искались по открытым российским источникам, затем второй проход независимо перепроверял суммы, сроки и ссылки. Исправлено 190 советов из 378. Что подтвердить не удалось, помечено словами «Проверьте актуальную норму». Ошибки всё равно возможны.</div></details><details><summary><span>Что значат классы A, B и C?</span><i class="ph ph-caret-down" aria-hidden="true"></i></summary><div class="a">A: есть конкретное число из метаанализа, большого наблюдения или рандомизированного испытания. B: исследования есть, но точного числа нет. C: опыт автора или общее мнение. Класс показан у универсальных советов, у адаптированных стоит пометка «Адаптировано для РФ» и список источников.</div></details><details><summary><span>Где хранится избранное?</span><i class="ph ph-caret-down" aria-hidden="true"></i></summary><div class="a">Только в браузере на вашем устройстве. Сайт не отправляет список на сервер и не требует регистрации. Если очистить данные сайта, избранное пропадёт, поэтому список можно скопировать текстом.</div></details><details><summary><span>Это бесплатно?</span><i class="ph ph-caret-down" aria-hidden="true"></i></summary><div class="a">Да. Без регистрации, подписки и рекламы.</div></details><details><summary><span>Как сообщить об ошибке или устаревшей норме?</span><i class="ph ph-caret-down" aria-hidden="true"></i></summary><div class="a">Откройте обращение на GitHub: github.com/VisualDrug/special-waffle/issues. Укажите номер совета в формате «раздел.совет» и что именно устарело.</div></details><details><summary><span>Можно ли использовать тексты?</span><i class="ph ph-caret-down" aria-hidden="true"></i></summary><div class="a">Да, на условиях CC BY 4.0: укажите оригинал «高性价比人生指南» (eternity4719), приложите ссылку на лицензию и отметьте, что текст изменён.</div></details></div>
+</div></section>
+
+<section class="section" id="start"><div class="container">
+  <div class="cta reveal">
+    <span class="eyebrow">Без риска</span>
+    <h2 class="h">Бесплатно, без регистрации. Избранное остаётся только у вас.</h2>
+    <p class="muted" style="max-width:680px">Нашли ошибку или устаревшую норму? Напишите на GitHub, исправим.</p>
+    <a class="btn" href="cards.html">Вытянуть первую карту <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+  </div>
+</div></section>
+</main>
+<footer class="site"><div class="container"><div class="row">
+<div class="col"><b style="color:var(--fg)">Искусство жить</b>
+<span>Справочник советов для жизни в России. Перевод и адаптация справочника «高性价比人生指南» (eternity4719/HowToLiveBetter), лицензия CC BY 4.0. Текст изменён: переведён, сокращён и адаптирован.</span></div>
+<div class="links-row"><a href="guide.html">Все советы</a><a href="cards.html">Колода</a><a href="privacy.html">Политика конфиденциальности</a><a href="terms.html">Условия использования</a><a href="https://github.com/eternity4719/HowToLiveBetter" target="_blank" rel="noopener">Оригинал на GitHub</a><a href="https://github.com/VisualDrug/special-waffle/issues" target="_blank" rel="noopener">Сообщить об ошибке</a></div>
+</div></div></footer>
+<script src="site.js"></script>
+</body></html>

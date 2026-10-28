@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Все советы: искусство жить</title>
+<meta name="description" content="Полный список из 512 советов с поиском и фильтрами по ресурсу, доказательности и затратам.">
+
+<link rel="canonical" href="https://visualdrug.github.io/special-waffle/guide.html">
+<meta property="og:type" content="website"><meta property="og:locale" content="ru_RU"><meta property="og:site_name" content="Искусство жить">
+<meta property="og:title" content="Все советы: искусство жить"><meta property="og:description" content="Полный список из 512 советов с поиском и фильтрами по ресурсу, доказательности и затратам."><meta property="og:url" content="https://visualdrug.github.io/special-waffle/guide.html"><meta property="og:image" content="https://visualdrug.github.io/special-waffle/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23131209'/%3E%3Crect x='17' y='14' width='30' height='38' rx='5' fill='%23B6F36B'/%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="site.css">
+
+</head>
+<body>
+<a class="skip" href="#main">Перейти к содержимому</a>
+<header class="nav-wrap"><nav class="nav" aria-label="Основная навигация">
+<a class="brand" href="index.html">Искусство жить</a>
+<div class="links"><a href="guide.html" aria-current="page">Советы</a><a href="cards.html">Колода</a><a href="index.html#faq">Вопросы</a></div>
+<a class="btn sm" href="cards.html" style="display:none" id="navcta">Вытянуть карту</a>
+<button class="icon-btn" id="theme" type="button" aria-label="Сменить тему"></button>
+<button class="icon-btn burger" id="burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="mmenu"><span></span><span></span></button>
+</nav></header>
+<div class="mmenu" id="mmenu" aria-hidden="true"><a href="index.html">Главная</a><a href="guide.html">Советы</a><a href="cards.html">Колода</a><a href="index.html#faq">Вопросы</a></div>
+<style>@media (min-width:768px){#navcta{display:inline-flex!important}}</style>
+
+<main id="main"><div class="container page-top stack g-400" style="padding-bottom:96px">
+  <header class="stack g-100"><h1 style="font-size:36px;line-height:40px">Все советы</h1>
+  <p class="lead">512 советов в 31 разделе. Откройте раздел или найдите совет по слову и отфильтруйте по тому, что хотите сберечь.</p></header>
+  <section aria-label="Карта разделов" class="stack g-200"><h2 class="h">Разделы</h2><div class="map" id="map"></div></section>
+  <section id="guide" class="stack g-200" aria-label="Список советов">
+    <div class="toolbar" role="search">
+      <input id="q" class="search" type="search" placeholder="Поиск по советам: зубы, залог, ожог" aria-label="Поиск по советам" autocomplete="off">
+      <div class="frow"><span class="lab">Ресурс</span>
+        <button class="chip" data-g="lens" data-v="死亡率" aria-pressed="false">Жизнь</button>
+        <button class="chip" data-g="lens" data-v="时间" aria-pressed="false">Время и силы</button>
+        <button class="chip" data-g="lens" data-v="金钱" aria-pressed="false">Деньги</button>
+        <button class="chip" data-g="lens" data-v="自由" aria-pressed="false">Свобода</button></div>
+      <div class="frow"><span class="lab">Доказательность</span>
+        <button class="chip" data-g="grade" data-v="A" aria-pressed="false">A</button>
+        <button class="chip" data-g="grade" data-v="B" aria-pressed="false">B</button>
+        <button class="chip" data-g="grade" data-v="C" aria-pressed="false">C</button>
+        <button class="chip" data-g="grade" data-v="РФ" aria-pressed="false">Адаптировано для РФ</button>
+        <span class="lab" style="margin-left:8px">Ещё</span>
+        <button class="chip" data-g="top" data-v="1" aria-pressed="false">Очень выгодно</button>
+        <button class="chip" data-g="free" data-v="1" aria-pressed="false">Бесплатно</button>
+        <button class="chip" data-g="dis" data-v="1" aria-pressed="false">Спорное</button>
+        <button class="chip" id="reset" aria-pressed="false">Сбросить</button></div>
+      <div class="count" id="count" aria-live="polite"></div>
+    </div>
+    <div id="chapters" class="stack g-75"></div>
+  </section>
+  <section class="stack g-200" aria-label="Длинные статьи"><h2 class="h">Длинные статьи</h2><div id="docs" class="stack g-75"></div></section>
+  <p class="note" style="max-width:680px">Классы доказательности: A, B, C для универсальных советов. Адаптированные советы помечены «Адаптировано для РФ»: нормы проверяйте по актуальной редакции закона. Ссылки вида «раздел X, совет Y» ведут на советы исходной книги, часть которых убрана.</p>
+</div></main>
+<footer class="site"><div class="container"><div class="row">
+<div class="col"><b style="color:var(--fg)">Искусство жить</b>
+<span>Справочник советов для жизни в России. Перевод и адаптация справочника «高性价比人生指南» (eternity4719/HowToLiveBetter), лицензия CC BY 4.0. Текст изменён: переведён, сокращён и адаптирован.</span></div>
+<div class="links-row"><a href="guide.html">Все советы</a><a href="cards.html">Колода</a><a href="privacy.html">Политика конфиденциальности</a><a href="terms.html">Условия использования</a><a href="https://github.com/eternity4719/HowToLiveBetter" target="_blank" rel="noopener">Оригинал на GitHub</a><a href="https://github.com/VisualDrug/special-waffle/issues" target="_blank" rel="noopener">Сообщить об ошибке</a></div>
+</div></div></footer>
+<script src="site.js"></script>
+
+<script src="names.js"></script>
+<script src="app.js"></script>
+</body></html>

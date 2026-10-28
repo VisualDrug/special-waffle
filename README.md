@@ -15,7 +15,11 @@
 Без Actions: Settings → Pages → Deploy from a branch → `main` / root.
 
 ## Файлы
-- `index.html`, `app.js`, `names.js` — сайт; `data/chNN.js` — разделы (грузятся по мере открытия), `data/docs.js` — длинные статьи.
+- `index.html` лендинг, `guide.html` все советы, `cards.html` колода, `privacy.html`, `terms.html`, `404.html`; `site.css`, `site.js`, `app.js`, `deck.js`, `names.js` — стили и скрипты; `data/chNN.js` — разделы (грузятся по мере открытия), `data/docs.js` — длинные статьи.
 - `src/` — сокращённый перевод (`ru/`); полный перевод лежит прямо в `data/`.
 
 Лицензия текста: CC BY 4.0, указывайте оригинал и что текст изменён.
+
+
+## Сборка страниц
+HTML страниц собирается из шаблонов: `python3 tools/build_site.py` (общая навигация и подвал в `tools/partials.py`).
