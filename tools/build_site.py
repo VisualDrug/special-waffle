@@ -194,7 +194,7 @@ def guide():
 </div></main>
 {FOOT}
 <script src="names.js"></script>
-<script src="app.js"></script>
+<script src="app.js?v=3"></script>
 </body></html>'''
     write('guide.html', h + body)
 
@@ -238,7 +238,7 @@ def cards():
 {FOOT}
 <script src="names.js"></script>
 <script src="data/cards.js"></script>
-<script src="deck.js"></script>
+<script src="deck.js?v=3"></script>
 </body></html>'''
     write('cards.html', h + body)
 
