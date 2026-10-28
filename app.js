@@ -35,7 +35,7 @@ function match(it){
 function fill(n){var d=secs[n];return loadCh(n).then(function(data){var arr=data.items.filter(match);
   d.querySelector('.ccnt').textContent=(filtering?arr.length+' из ':'')+data.items.length+' сов.';
   d.hidden=filtering&&!arr.length;
-  d.querySelector('.body').innerHTML=(filtering?'':'<div class="intro">'+para(data.intro)+'</div>')+(arr.length?'<div class="list">'+arr.map(function(it){return cardHTML(n,it)}).join('')+'</div>':'<p class="note">Нет советов по фильтру.</p>');
+  d.querySelector('.body').innerHTML=(filtering||!data.intro?'':'<div class="intro">'+para(data.intro)+'</div>')+(arr.length?'<div class="list">'+arr.map(function(it){return cardHTML(n,it)}).join('')+'</div>':'<p class="note">Нет советов по фильтру.</p>');
   return arr.length})}
 var updT=0;
 async function upd(){
