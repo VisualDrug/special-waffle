@@ -5,7 +5,7 @@ var MN={'0':'Бесплатно','少':'Недорого','多':'Дорого'},
 // card: 0ch 1n 2title 3plain 4cost 5grade 6money 7time 8will 9lvl 10lens 11ratio 12dis
 var C=window.CARDS,byId={};C.forEach(function(c,i){c.i=i;byId[c[0]+'-'+c[1]]=c});
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(x){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[x]})}
-function inline(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/(https?:\/\/[^\s<>&]+?)(?=[\s<>]|&lt;|&gt;|$|[;,)]\s)/g,function(u){return '<a href="'+u+'" target="_blank" rel="noopener">'+u+'</a>'})}
+function inline(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/(?:[^\s<>&]|&amp;)+?)(?=[\s<>]|&lt;|&gt;|$|[;,)]\s)/g,function(m,t,l,u){var h=l||u;return '<a href="'+h+'" target="_blank" rel="noopener">'+(t||u)+'</a>'})}
 function para(s){return String(s||'').split(/\n+/).filter(Boolean).map(function(p){return '<p>'+inline(p)+'</p>'}).join('')}
 // favorites
 var KEY='vygodnee-fav',favs=[];

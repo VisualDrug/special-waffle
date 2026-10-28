@@ -4,10 +4,10 @@ var MN={'0':'Бесплатно','少':'Недорого','多':'Дорого'},
 var BN={'大':'большая','中':'средняя','小':'малая'};
 var st={lens:null,grade:null,top:0,free:0,dis:0,q:''}, loaded={}, filtering=false;
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function inline(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/(https?:\/\/[^\s<>&]+?)(?=[\s<>]|&lt;|&gt;|$|[;,)]\s)/g,function(u){return '<a href="'+u+'" target="_blank" rel="noopener">'+u+'</a>'})}
+function inline(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/(?:[^\s<>&]|&amp;)+?)(?=[\s<>]|&lt;|&gt;|$|[;,)]\s)/g,function(m,t,l,u){var h=l||u;return '<a href="'+h+'" target="_blank" rel="noopener">'+(t||u)+'</a>'})}
 function para(s){return String(s||'').split(/\n\s*\n|\n/).filter(Boolean).map(function(p){return '<p>'+inline(p)+'</p>'}).join('')}
 function loadScript(src){return new Promise(function(ok,fail){var s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=fail;document.head.appendChild(s)})}
-function loadCh(n){if(loaded[n])return loaded[n];var p=String(n).padStart(2,'0');return loaded[n]=loadScript('data/ch'+p+'.js').then(function(){var d=window.D[n];d.items.forEach(function(it){it.h=null});return d})}
+function loadCh(n){if(loaded[n])return loaded[n];var p=String(n).padStart(2,'0');return loaded[n]=loadScript('data/ch'+p+'.js').catch(function(e){delete loaded[n];throw e}).then(function(){var d=window.D[n];d.items.forEach(function(it){it.h=null});return d})}
 function loadAll(){return Promise.all(KEYS.map(function(n){return loadCh(n)}))}
 // map
 var mapEl=document.getElementById('map');
@@ -37,15 +37,17 @@ function fill(n){var d=secs[n];return loadCh(n).then(function(data){var arr=data
   d.hidden=filtering&&!arr.length;
   d.querySelector('.body').innerHTML=(filtering?'':'<div class="intro">'+para(data.intro)+'</div>')+(arr.length?'<div class="list">'+arr.map(function(it){return cardHTML(n,it)}).join('')+'</div>':'<p class="note">Нет советов по фильтру.</p>');
   return arr.length})}
+var updT=0;
 async function upd(){
-  filtering=!!(st.lens||st.grade||st.top||st.free||st.dis||st.q);
+  var my=++updT;filtering=!!(st.lens||st.grade||st.top||st.free||st.dis||st.q);
   var cnt=document.getElementById('count');
   if(!filtering){cnt.textContent='Всего: 512 советов';for(var c of KEYS){secs[c].hidden=false;secs[c].open=false;secs[c].querySelector('.ccnt').textContent=CNT[c]+' сов.'}return}
-  cnt.textContent='Ищу…';await loadAll();var tot=0;
-  for(var c of KEYS){var k=await fill(c);tot+=k;if(k)secs[c].open=true}
+  cnt.textContent='Ищу…';await loadAll();if(my!==updT)return;var tot=0;
+  for(var c of KEYS){var k=await fill(c);if(my!==updT)return;tot+=k;if(k)secs[c].open=true}
   cnt.textContent='Найдено: '+tot+' из 512';
   var e=document.getElementById('emp');if(e)e.remove();if(!tot)chEl.insertAdjacentHTML('afterbegin','<div class="empty" id="emp">Ничего не найдено. Измените запрос или снимите фильтры.</div>');
 }
+chEl.addEventListener('error',function(){},true);
 chEl.addEventListener('toggle',function(e){var d=e.target;if(d.classList.contains('ch')&&d.open&&!d.dataset.f){d.dataset.f=1;fill(+d.dataset.ch)}},true);
 document.addEventListener('click',function(e){
   var m=e.target.closest('.mchip');
